@@ -1,278 +1,180 @@
-# HireTrack — Job Application Tracker
+# 🎯 HireTrack — Job Application Tracker
 
-HireTrack is a full-stack job application tracker built to help users manage the complete journey of applying for jobs.
-It allows users to save applications, track their progress through stages like Applied, Interview, Offer, Rejected, and Ghosted, view analytics on their pipeline, and receive follow-up reminders.
+> A full-stack job application tracking system built with React, Node.js/Express, and PostgreSQL — complete with JWT authentication, analytics dashboards, and automated email reminders.
 
-This project is also a good interview-ready example because it shows full-stack development, authentication, database integration, analytics, and scheduled background jobs in one app.
-
-**Live Demo:** [your-link-here]
 
 ---
+## ✨ What HireTrack Does
 
-## Simple Project Explanation
+HireTrack helps job seekers stay organized during their search. Users can:
 
-Think of HireTrack as a personal dashboard for job seekers.
-A user can:
-- sign up or log in
-- add a new job application
-- update the current stage of the application
-- search and filter applications
-- export all applications as CSV
-- view a dashboard with charts and upcoming follow-ups
+- 🔐 Register and log in securely
+- 📋 Add and manage job applications
+- 🔄 Track and update application status (applied, interviewing, offer, rejected, etc.)
+- 🔍 Search and filter applications
+- 📊 View analytics on a visual dashboard
+- 📧 Receive automated reminder emails for follow-ups
 
-The frontend is built with React and the backend is built with Node.js and Express.
-All data is stored in PostgreSQL.
+It spans **authentication, relational data modeling, REST APIs, data visualization, and scheduled background jobs** — a genuinely full-stack feature set.
 
----
 
-## Request Flow of the Project
+## 🧩 Tech Stack
 
-### 1. User opens the app
-The browser loads the React frontend. If the user is not logged in, they are shown the authentication page.
-
-### 2. User logs in
-The frontend sends the login request to the backend. The backend verifies the email and password and returns a JWT access token. A refresh token is also stored securely in an HTTP-only cookie.
-
-### 3. User interacts with applications
-When the user adds, edits, or deletes an application, the frontend sends requests to the backend. The backend validates the data and interacts with PostgreSQL.
-
-### 4. Dashboard fetches analytics
-The dashboard page requests analytics data from the backend. The backend runs SQL queries to build summary counts and trend data for the charts.
-
-### 5. Reminder emails are sent automatically
-A scheduled cron job checks for follow-up dates that match today and sends reminder emails to the user.
-
----
-
-## Architecture
-
-```
-┌─────────────────┐        ┌──────────────────┐        ┌─────────────┐
-│   React (Vite)  │  HTTP  │  Node.js/Express │  SQL   │ PostgreSQL  │
-│   + Recharts    │◄──────►│  REST API        │◄──────►│             │
-│   Port 5173     │        │  Port 5000       │        │  Port 5432  │
-└─────────────────┘        └──────────────────┘        └─────────────┘
-                                    │
-                              node-cron
-                            (daily 8AM)
-                                    │
-                              Nodemailer
-                           (Gmail SMTP)
-```
-
-**Auth Flow:**
-- Access token (JWT, 15 min) → stored in localStorage, sent in `Authorization` header
-- Refresh token (JWT, 7 days) → stored in HTTP-only cookie (XSS-safe)
-- Auto silent refresh via Axios interceptor when access token expires
-
----
-
-## Features
-
-- **Application Tracking** — Add, edit, delete applications with company, role, status, dates, notes, salary, location
-- **5 Status Stages** — Applied → Interview → Offer → Rejected → Ghosted
-- **Analytics Dashboard** — Funnel bar chart, weekly activity trend, upcoming follow-ups
-- **Follow-up Reminders** — Automated daily email reminders via node-cron + Nodemailer
-- **CSV Export** — Download all applications as a spreadsheet
-- **JWT Auth from scratch** — No Firebase/Auth0; refresh token rotation implemented manually
-- **Docker Compose** — One command to run entire stack locally
-
----
-
-## Tech Stack
-
-| Layer | Technology |
+| Layer | Technologies |
 |---|---|
-| Frontend | React 18, React Router, Recharts, Axios |
-| Backend | Node.js, Express |
-| Database | PostgreSQL (via `pg` driver) |
-| Auth | JWT (access + refresh tokens), bcrypt |
-| Scheduling | node-cron + Nodemailer |
-| Containerisation | Docker, Docker Compose, Nginx |
-| Deployment | Render (backend), Vercel (frontend) |
-| CI/CD | GitHub Actions |
+| **Frontend** | React, Vite, Axios, React Router |
+| **Backend** | Node.js, Express |
+| **Database** | PostgreSQL |
+| **Auth** | JWT (access + refresh tokens), bcrypt |
+| **Scheduled Jobs** | node-cron, nodemailer |
+| **Infrastructure** | Docker, Docker Compose, Nginx |
 
 ---
 
-## Local Setup (Without Docker)
+## 🔐 Why this Authentication Design ??
+
+Rather than a single long-lived token, the app implements a proper **access + refresh token pattern**:
+
+- `backend/src/config/jwt.js` handles token generation and verification
+- `backend/src/middleware/auth.js` guards protected routes, validating tokens before allowing requests through
+- `frontend/src/api/axios.js` centralizes API calls, automatically attaches tokens, silently refreshes expired ones, and redirects to login on failure
+- Passwords are hashed with **bcrypt** before storage
+
+This is the kind of pattern used in real production systems, not just a toy `localStorage` token check — a strong signal of security awareness.
+
+---
+
+## 📊 Feature Highlights
+
+### Application Management 
+Full create/read/update/delete flow for job applications, including CSV export — implemented cleanly across `routes/applications.js` and `controllers/applicationController.js`.
+
+### Analytics Dashboard
+Dedicated analytics endpoints (`routes/analytics.js`, `controllers/analyticsController.js`) power:
+- Application counts by status
+- Weekly activity trends
+- Upcoming follow-up tracking
+
+The dashboard isn't just decorative charts glued onto static data — it's backed by purpose-built database queries.
+
+### Automated Reminder Emails
+A `node-cron` job checks daily for applications needing follow-up and sends reminder emails via `nodemailer` — a great example of implementing background/scheduled work correctly in a Node app.
+
+### Centralized Error Handling
+A dedicated error-handling middleware ensures failures return clean, consistent responses instead of crashing the server — a small detail that reflects production-readiness.
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── docker-compose.yml
+├── backend/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+│       ├── index.js                 # App entry point
+│       ├── config/
+│       │   ├── db.js                # DB connection + schema init
+│       │   ├── jwt.js               # Token generation/verification
+│       │   └── cron.js              # Scheduled reminder emails
+│       ├── middleware/
+│       │   ├── auth.js              # Route protection
+│       │   └── errorHandler.js      # Centralized error handling
+│       ├── routes/
+│       │   ├── auth.js
+│       │   ├── applications.js
+│       │   └── analytics.js
+│       └── controllers/
+│           ├── authController.js
+│           ├── applicationController.js
+│           └── analyticsController.js
+└── frontend/
+    ├── Dockerfile
+    ├── nginx.conf
+    ├── vite.config.js
+    ├── index.html
+    └── src/
+        ├── main.jsx                 # React entry point
+        ├── App.jsx                  # Route definitions
+        ├── index.css                # Design system / styling
+        ├── api/
+        │   └── axios.js             # Shared API client
+        ├── context/
+        │   └── AuthContext.jsx      # Global auth state
+        ├── components/
+        │   ├── layout/
+        │   │   ├── ProtectedLayout.jsx
+        │   │   └── Sidebar.jsx
+        │   └── ApplicationModal.jsx
+        └── pages/
+            ├── AuthPage.jsx
+            ├── Applications.jsx
+            └── Dashboard.jsx
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- PostgreSQL running locally
+- [Docker](https://www.docker.com/) and Docker Compose installed
 
-### Backend
+### Run the full stack
+
 ```bash
-cd backend
-cp .env.example .env    # Fill in your values
-npm install
-npm run dev             # Starts on port 5000
+git clone <repository-url>
+cd hiretrack
+docker-compose up --build
 ```
 
-### Frontend
+This spins up the PostgreSQL database, the Express backend, and the React frontend (served via Nginx) together — no manual environment juggling required.
+
+### Local development (without Docker)
+
 ```bash
+# Backend
+cd backend
+npm install
+npm run dev
+
+# Frontend
 cd frontend
 npm install
-npm run dev             # Starts on port 5173
+npm run dev
 ```
 
----
-
-## Local Setup (With Docker) — Recommended
-
-```bash
-# Clone the repo
-git clone https://github.com/yourusername/hiretrack.git
-cd hiretrack
-
-# Start everything (DB + backend + frontend)
-docker-compose up --build
-
-# App is now running at:
-# Frontend: http://localhost
-# Backend:  http://localhost:5000
-# DB:       localhost:5432
-```
-
-> **First run:** Docker will pull images, build containers, and auto-create all DB tables. Takes ~2 minutes.
+The Vite dev server proxies API requests to the backend, so both can run independently during development.
 
 ---
 
-## Environment Variables
+## 🗺️ End-to-End Flow (for reviewers)
 
-Copy `backend/.env.example` to `backend/.env` and fill in:
+**Login:** `AuthPage.jsx` → `AuthContext` → `axios.js` → `routes/auth.js` → `authController.js` → `jwt.js`
 
-| Variable | Description |
-|---|---|
-| `DB_*` | PostgreSQL connection details |
-| `JWT_SECRET` | Long random string (use `openssl rand -hex 32`) |
-| `JWT_REFRESH_SECRET` | Different long random string |
-| `EMAIL_USER` | Gmail address for sending reminders |
-| `EMAIL_PASS` | Gmail App Password (not your real password) |
+**Applications:** `Applications.jsx` → `routes/applications.js` → `applicationController.js` → PostgreSQL → table updates
 
-**Getting Gmail App Password:**
-1. Go to Google Account → Security → 2-Step Verification
-2. At the bottom → App Passwords
-3. Generate a password for "Mail" → use that as `EMAIL_PASS`
+**Dashboard:** `Dashboard.jsx` → analytics endpoints → `analyticsController.js` → charts render
+
+**Reminders:** `cron.js` runs on schedule → checks DB for due follow-ups → sends email via `nodemailer`
 
 ---
 
-## Deployment
+## 🛣️ Roadmap — Upcoming Features
 
-### Backend → Render
-1. Push code to GitHub
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect your GitHub repo, select `backend/` as root
-4. Set all env variables from `.env.example`
-5. Build command: `npm install` | Start command: `node src/index.js`
-6. Add a PostgreSQL database on Render and copy the connection URL
+The core system is already solid, and these are the natural next additions to round it out into an even more complete job-search platform:
 
-### Frontend → Vercel
-1. Go to [vercel.com](https://vercel.com) → New Project
-2. Import your GitHub repo, set root to `frontend/`
-3. Add environment variable: `VITE_API_URL=https://your-render-backend-url.com`
-4. Deploy — Vercel auto-detects Vite
+- 🔑 **OAuth Login (Google/GitHub)** — Sign in with existing Google or GitHub accounts, reducing signup friction alongside the current email/password + JWT flow.
+- 📄 **Resume Upload** — Let users attach and store a resume against their profile or individual applications, so all their job-search materials live in one place.
+- 🤖 **AI Resume Matching** — Compare an uploaded resume against a job description to surface match strength and skill gaps, helping users tailor applications before submitting.
+- 🎤 **Interview Preparation Assistant** — An AI-assisted tool that generates likely interview questions and practice answers based on the role and company for a given application.
 
-### CI/CD
-Add these to GitHub Secrets:
-- `RENDER_DEPLOY_HOOK` — from Render service settings
-- `VITE_API_URL` — your Render backend URL
-
-Every push to `main` auto-deploys both frontend and backend.
+These additions would extend HireTrack from a tracking tool into a genuinely end-to-end job-search companion — and the existing architecture (modular routes/controllers, centralized API client, auth middleware) is well positioned to absorb them without a redesign.
 
 ---
 
-## Common Interview Questions
+## 💬 Thoughts
 
-### What is the purpose of this project?
-This project is a job application tracker that helps users manage applications, track stages, view analytics, and receive follow-up reminders.
+What stands out most about HireTrack is the **coherence** of the system — the auth pattern, database layer, API design, and frontend state management all fit together the way you'd expect from a real production app, not a disconnected set of tutorial features bolted together. It touches nearly every core skill expected of a full-stack engineer: relational schema design, secure auth, REST API design, background job scheduling, and a clean, componentized React frontend.
 
-### How is the frontend connected to the backend?
-The frontend uses Axios to send HTTP requests to the backend API. The backend exposes REST endpoints for authentication, applications, and analytics.
-
-### How is authentication handled?
-The app uses JWT authentication. Access tokens are used for regular requests, and refresh tokens are stored in HTTP-only cookies for better security.
-
-### What is the role of the database?
-PostgreSQL stores user accounts, applications, and refresh tokens.
-
-### What is the dashboard built from?
-The dashboard is built from backend analytics endpoints that return counts and trends. The frontend renders them with charts.
-
-### How are reminder emails sent?
-The backend uses node-cron to run scheduled jobs and nodemailer to send emails when follow-up dates are due.
-
-### Why is this project good for interviews?
-It demonstrates full-stack development, secure auth, database design, REST APIs, analytics, background jobs, and deployment readiness.
-
----
-
-## API Reference
-
-### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/register` | Create account |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/refresh` | Refresh access token (uses cookie) |
-| POST | `/api/auth/logout` | Logout + clear cookie |
-| GET | `/api/auth/me` | Get current user |
-
-### Applications
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/applications` | Get all (supports `?status=&search=`) |
-| POST | `/api/applications` | Create new |
-| PUT | `/api/applications/:id` | Update |
-| DELETE | `/api/applications/:id` | Delete |
-| GET | `/api/applications/export/csv` | Download CSV |
-
-### Analytics
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/analytics/summary` | Counts per status |
-| GET | `/api/analytics/weekly` | Weekly trend (8 weeks) |
-| GET | `/api/analytics/followups` | Upcoming follow-ups |
-
----
-
-## Project Structure
-
-```
-hiretrack/
-├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   │   ├── db.js          # PostgreSQL pool + table init
-│   │   │   ├── jwt.js         # Token generation/verification
-│   │   │   └── cron.js        # Scheduled email reminders
-│   │   ├── middleware/
-│   │   │   ├── auth.js        # JWT verification middleware
-│   │   │   └── errorHandler.js
-│   │   ├── controllers/
-│   │   │   ├── authController.js
-│   │   │   ├── applicationController.js
-│   │   │   └── analyticsController.js
-│   │   ├── routes/
-│   │   │   ├── auth.js
-│   │   │   ├── applications.js
-│   │   │   └── analytics.js
-│   │   └── index.js           # Express app entry point
-│   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── api/axios.js       # Axios instance + refresh interceptor
-│   │   ├── context/AuthContext.jsx
-│   │   ├── components/
-│   │   │   ├── layout/Sidebar.jsx
-│   │   │   ├── layout/ProtectedLayout.jsx
-│   │   │   └── ApplicationModal.jsx
-│   │   ├── pages/
-│   │   │   ├── AuthPage.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── Applications.jsx
-│   │   └── index.css
-│   ├── Dockerfile
-│   └── nginx.conf
-├── .github/workflows/deploy.yml
-└── docker-compose.yml
-```
