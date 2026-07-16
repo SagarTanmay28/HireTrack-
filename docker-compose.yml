@@ -1,0 +1,64 @@
+version: "3.8"
+
+# Docker Compose lets you run all 3 services (frontend, backend, DB)
+# with a single command: docker-compose up --build
+
+services:
+
+  # PostgreSQL database
+  db:
+    image: postgres:15-alpine        # Lightweight postgres image
+    container_name: hiretrack_db
+    environment:
+      POSTGRES_DB: hiretrack
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword  # Change this!
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Data persists between restarts
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Node.js backend
+  backend:
+    build: ./backend
+    container_name: hiretrack_backend
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DB_HOST: db             # Use service name, not localhost
+      DB_PORT: 5432
+      DB_NAME: hiretrack
+      DB_USER: postgres
+      DB_PASSWORD: yourpassword  # Must match db service above
+      JWT_SECRET: change_this_to_a_long_random_string_in_production
+      JWT_REFRESH_SECRET: change_this_refresh_secret_too
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      CLIENT_URL: http://localhost
+      EMAIL_USER: youremail@gmail.com
+      EMAIL_PASS: your_gmail_app_password
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy   # Wait for DB to be ready before starting
+
+  # React frontend (served by Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000  # Backend URL for API calls
+    container_name: hiretrack_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:    # Named volume so DB data survives container restarts

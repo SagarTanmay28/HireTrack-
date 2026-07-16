@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --bg-card: #1a1d27;
+  --bg-hover: #21253a;
+  --border: #2a2d3e;
+  --text: #e8eaf0;
+  --text-muted: #7a7f9a;
+  --text-dim: #4a4f6a;
+  --accent: #6c63ff;
+  --accent-light: #8b84ff;
+  --accent-bg: rgba(108, 99, 255, 0.12);
+  --green: #22c55e;
+  --green-bg: rgba(34, 197, 94, 0.1);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245, 158, 11, 0.1);
+  --red: #ef4444;
+  --red-bg: rgba(239, 68, 68, 0.1);
+  --blue: #3b82f6;
+  --blue-bg: rgba(59, 130, 246, 0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500; transition: all 0.15s;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-light); }
+.btn-ghost { color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text); }
+.btn-danger { color: var(--red); border: 1px solid var(--border); }
+.btn-danger:hover { background: var(--red-bg); border-color: var(--red); }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.input {
+  width: 100%; padding: 9px 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-size: 13px; transition: border 0.15s;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+.input::placeholder { color: var(--text-dim); }
+
+.badge {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 99px; font-size: 11px; font-weight: 500;
+}
+.badge-applied  { background: var(--blue-bg); color: var(--blue); }
+.badge-interview{ background: var(--amber-bg); color: var(--amber); }
+.badge-offer    { background: var(--green-bg); color: var(--green); }
+.badge-rejected { background: var(--red-bg); color: var(--red); }
+.badge-ghosted  { background: rgba(122,127,154,0.1); color: var(--text-muted); }
