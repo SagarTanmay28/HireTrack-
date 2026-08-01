@@ -2,6 +2,8 @@
 
 > A full-stack job application tracking system built with React, Node.js/Express, and PostgreSQL — complete with JWT authentication, analytics dashboards, and automated email reminders.
 
+![Home Page](HireTrackApplication.png)
+
 
 ---
 ## ✨ What HireTrack Does
