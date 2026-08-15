@@ -170,7 +170,6 @@ The Vite dev server proxies API requests to the backend, so both can run indepen
 
 ---
 
-## 🛣️ Roadmap — Upcoming Features
 
 The core system is already solid, and these are the natural next additions to round it out into an even more complete job-search platform:
 
@@ -182,8 +181,4 @@ The core system is already solid, and these are the natural next additions to ro
 These additions would extend HireTrack from a tracking tool into a genuinely end-to-end job-search companion — and the existing architecture (modular routes/controllers, centralized API client, auth middleware) is well positioned to absorb them without a redesign.
 
 ---
-
-## 💬 Thoughts
-
-What stands out most about HireTrack is the **coherence** of the system — the auth pattern, database layer, API design, and frontend state management all fit together the way you'd expect from a real production app, not a disconnected set of tutorial features bolted together. It touches nearly every core skill expected of a full-stack engineer: relational schema design, secure auth, REST API design, background job scheduling, and a clean, componentized React frontend.
 
