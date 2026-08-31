@@ -2,6 +2,30 @@
 
 HireTrack is a **full-stack Job Application Tracker** built to help job seekers manage their complete job-search workflow in one place. It supports **200+ job applications per user** with secure authentication, application tracking, analytics, automated follow-ups, AI-powered resume analysis, and ATS-optimized resume generation.
 
+
+## 📸 Screenshots
+
+### Dashboard
+
+![HireTrack Dashboard](HireTrack%20Dashboard.png)
+
+### Application
+
+![HireTrack Application](HireTrack%20Application.png)
+
+### Job Description & System Design
+
+![JD and SD](JD%20and%20SD.png)
+
+### Technical Questions
+
+![Technical Questions](Technical%20Q%20Page%20.png)
+
+### Roadmap
+
+![Roadmap](Roadmap%20Page%20.png)
+
+
 ## ✨ What HireTrack Does
 
 - 🔐 **Secure Authentication** — JWT authentication with access + refresh tokens, refresh token rotation, HTTP-only cookies, bcrypt password hashing, and Google OAuth.
@@ -28,27 +52,6 @@ HireTrack is a **full-stack Job Application Tracker** built to help job seekers 
 | **Deployment** | Docker, Docker Compose, Render, Vercel |
 | **Web Server** | Nginx |
 
-## 📸 Screenshots
-
-### Dashboard
-
-![HireTrack Dashboard](HireTrack%20Dashboard.png)
-
-### Application
-
-![HireTrack Application](HireTrack%20Application.png)
-
-### Job Description & System Design
-
-![JD and SD](JD%20and%20SD.png)
-
-### Technical Questions
-
-![Technical Questions](Technical%20Q%20Page%20.png)
-
-### Roadmap
-
-![Roadmap](Roadmap%20Page%20.png)
 
 ## 🔐 Authentication & Security
 
