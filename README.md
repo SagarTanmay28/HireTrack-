@@ -149,44 +149,6 @@ Puppeteer
 PDF Resume
 ```
 
-## 🏗️ System Architecture
-
-```text
-                    ┌─────────────────┐
-                    │   React + Vite  │
-                    │    Frontend     │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Axios API Client │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Node.js +       │
-                    │ Express.js API  │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-              ▼              ▼              ▼
-        PostgreSQL       Gemini AI       Auth System
-                                         JWT + OAuth
-              │              │
-              │              ├── Resume Parsing
-              │              ├── Skill Extraction
-              │              └── Skill Gap Detection
-              │
-              ├──────────────► Analytics
-              │
-              └──────────────► Applications
-
-        Node-cron ─────────► Nodemailer
-        Scheduled Jobs       Email Reminders
-
-        Puppeteer ─────────► ATS Resume PDF
-```
 
 ## 📁 Project Structure
 
