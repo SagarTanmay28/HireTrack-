@@ -16,7 +16,7 @@
 
 ## Technical Questions
 
-![Technical Questions](Technical%20Q%20Page.png)
+![Technical Questions](Technical%20Q%20Page%20.png)
 
 ## Roadmap
 
