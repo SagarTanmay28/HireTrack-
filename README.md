@@ -10,6 +10,18 @@
 
 ![HireTrack Application](HireTrack%20Application.png)
 
+## Job Description (JD) and System Design
+
+![JD and SD](JD%20and%20SD.png)
+
+## Technical Questions
+
+![Technical Questions](Technical%20Q%20Page.png)
+
+## Roadmap
+
+![Roadmap](Roadmap%20Page.png)
+
 
 
 ---
