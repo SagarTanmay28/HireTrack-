@@ -1,108 +1,210 @@
-# 🎯 HireTrack — Job Application Tracker
+# 🚀 HireTrack — Job Application Tracker
 
-> A full-stack job application tracking system built with React, Node.js/Express, and PostgreSQL — complete with JWT authentication, analytics dashboards, and automated email reminders.
+HireTrack is a **full-stack Job Application Tracker** built to help job seekers manage their complete job-search workflow in one place. It supports **200+ job applications per user** with secure authentication, application tracking, analytics, automated follow-ups, AI-powered resume analysis, and ATS-optimized resume generation.
 
-## Dashboard
-
-![HireTrack Dashboard](HireTrack%20Dashboard.png)
-
-## Application
-
-![HireTrack Application](HireTrack%20Application.png)
-
-## Job Description (JD) and System Design
-
-![JD and SD](JD%20and%20SD.png)
-
-## Technical Questions
-
-![Technical Questions](Technical%20Q%20Page%20.png)
-
-## Roadmap
-
-![Roadmap](Roadmap%20Page%20.png)
-
-
-
----
 ## ✨ What HireTrack Does
 
-HireTrack helps job seekers stay organized during their search. Users can:
-
-- 🔐 Register and log in securely
-- 📋 Add and manage job applications
-- 🔄 Track and update application status (applied, interviewing, offer, rejected, etc.)
-- 🔍 Search and filter applications
-- 📊 View analytics on a visual dashboard
-- 📧 Receive automated reminder emails for follow-ups
-
-It spans **authentication, relational data modeling, REST APIs, data visualization, and scheduled background jobs** — a genuinely full-stack feature set.
-
+- 🔐 **Secure Authentication** — JWT authentication with access + refresh tokens, refresh token rotation, HTTP-only cookies, bcrypt password hashing, and Google OAuth.
+- 📋 **Application Management** — Create, update, delete, search, filter, and track job applications across statuses such as Applied, Interviewing, Offered, and Rejected.
+- 📊 **Analytics Dashboard** — Visualize application statistics, status distribution, activity trends, and follow-up information.
+- 📧 **Automated Follow-ups** — Node-cron automatically checks applications requiring follow-up and sends reminder emails using Nodemailer.
+- 🤖 **Gemini AI Resume Analysis** — Parse resumes, extract skills, analyze job requirements, and identify skill gaps using Google Gemini AI.
+- 📄 **ATS-Optimized Resume Generator** — Generate structured, ATS-friendly resumes dynamically and export them as PDFs using Puppeteer.
+- 🗄️ **PostgreSQL Database** — Relational data modeling with REST APIs and database-backed analytics.
+- 🐳 **Containerized Deployment** — Docker and Docker Compose for consistent development and deployment.
+- ☁️ **Cloud Deployment** — Backend deployed on Render and frontend deployed on Vercel.
 
 ## 🧩 Tech Stack
 
-| Layer | Technologies |
+| Category | Technologies |
 |---|---|
 | **Frontend** | React, Vite, Axios, React Router |
-| **Backend** | Node.js, Express |
+| **Backend** | Node.js, Express.js |
 | **Database** | PostgreSQL |
-| **Auth** | JWT (access + refresh tokens), bcrypt |
-| **Scheduled Jobs** | node-cron, nodemailer |
-| **Infrastructure** | Docker, Docker Compose, Nginx |
+| **Authentication** | JWT, Refresh Token Rotation, Google OAuth, bcrypt |
+| **AI** | Google Gemini AI |
+| **Resume Generation** | Puppeteer |
+| **Automation** | Node-cron, Nodemailer |
+| **Deployment** | Docker, Docker Compose, Render, Vercel |
+| **Web Server** | Nginx |
 
----
+## 📸 Screenshots
 
-## 🔐 Why this Authentication Design ??
+### Dashboard
 
-Rather than a single long-lived token, the app implements a proper **access + refresh token pattern**:
+![HireTrack Dashboard](HireTrack%20Dashboard.png)
 
-- `backend/src/config/jwt.js` handles token generation and verification
-- `backend/src/middleware/auth.js` guards protected routes, validating tokens before allowing requests through
-- `frontend/src/api/axios.js` centralizes API calls, automatically attaches tokens, silently refreshes expired ones, and redirects to login on failure
-- Passwords are hashed with **bcrypt** before storage
+### Application
 
-This is the kind of pattern used in real production systems, not just a toy `localStorage` token check — a strong signal of security awareness.
+![HireTrack Application](HireTrack%20Application.png)
 
----
+### Job Description & System Design
 
-## 📊 Feature Highlights
+![JD and SD](JD%20and%20SD.png)
 
-### Application Management 
-Full create/read/update/delete flow for job applications, including CSV export — implemented cleanly across `routes/applications.js` and `controllers/applicationController.js`.
+### Technical Questions
 
-### Analytics Dashboard
-Dedicated analytics endpoints (`routes/analytics.js`, `controllers/analyticsController.js`) power:
-- Application counts by status
-- Weekly activity trends
-- Upcoming follow-up tracking
+![Technical Questions](Technical%20Q%20Page%20.png)
 
-The dashboard isn't just decorative charts glued onto static data — it's backed by purpose-built database queries.
+### Roadmap
 
-### Automated Reminder Emails
-A `node-cron` job checks daily for applications needing follow-up and sends reminder emails via `nodemailer` — a great example of implementing background/scheduled work correctly in a Node app.
+![Roadmap](Roadmap%20Page%20.png)
 
-### Centralized Error Handling
-A dedicated error-handling middleware ensures failures return clean, consistent responses instead of crashing the server — a small detail that reflects production-readiness.
+## 🔐 Authentication & Security
 
----
+HireTrack follows a production-oriented authentication architecture using:
+
+- JWT access and refresh tokens
+- Refresh token rotation
+- HTTP-only cookies
+- Google OAuth
+- bcrypt password hashing
+- Protected Express.js routes
+- Centralized authentication middleware
+
+```text
+User Login / Google OAuth
+          ↓
+    Authentication API
+          ↓
+ JWT Access + Refresh Tokens
+          ↓
+   HTTP-only Refresh Cookie
+          ↓
+ Protected Express.js Routes
+          ↓
+      PostgreSQL
+```
+
+## 📊 Application Management & Analytics
+
+HireTrack provides a complete application lifecycle:
+
+- Create and manage job applications
+- Track application status
+- Search and filter applications
+- Track follow-up dates
+- Export application data as CSV
+- View application statistics
+- Analyze weekly application activity
+- Monitor upcoming follow-ups
+
+The analytics dashboard is backed by dedicated PostgreSQL queries and REST API endpoints rather than static frontend data.
+
+## 📧 Automated Follow-ups
+
+A scheduled **Node-cron** background job checks the database for applications that require follow-up and automatically sends reminder emails through **Nodemailer**.
+
+```text
+Node-cron
+    ↓
+Check PostgreSQL
+    ↓
+Find Applications Due for Follow-up
+    ↓
+Nodemailer
+    ↓
+Reminder Email
+```
+
+## 🤖 Gemini AI Resume Analysis
+
+HireTrack integrates **Google Gemini AI** to provide intelligent resume analysis.
+
+The AI pipeline supports:
+
+- Resume parsing
+- Skill extraction
+- Job requirement analysis
+- Skill gap detection
+- Resume optimization insights
+
+```text
+Resume Upload
+     ↓
+Gemini AI
+     ↓
+Resume Parsing
+     ↓
+Skill Extraction
+     ↓
+Job Requirement Analysis
+     ↓
+Skill Gap Detection
+```
+
+## 📄 ATS-Optimized Resume Generator
+
+HireTrack includes an ATS-friendly resume generator that creates dynamic PDF resumes using **Puppeteer**.
+
+```text
+Resume Data
+     ↓
+Dynamic ATS Template
+     ↓
+HTML Rendering
+     ↓
+Puppeteer
+     ↓
+PDF Resume
+```
+
+## 🏗️ System Architecture
+
+```text
+                    ┌─────────────────┐
+                    │   React + Vite  │
+                    │    Frontend     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Axios API Client │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Node.js +       │
+                    │ Express.js API  │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+        PostgreSQL       Gemini AI       Auth System
+                                         JWT + OAuth
+              │              │
+              │              ├── Resume Parsing
+              │              ├── Skill Extraction
+              │              └── Skill Gap Detection
+              │
+              ├──────────────► Analytics
+              │
+              └──────────────► Applications
+
+        Node-cron ─────────► Nodemailer
+        Scheduled Jobs       Email Reminders
+
+        Puppeteer ─────────► ATS Resume PDF
+```
 
 ## 📁 Project Structure
 
-```
+```text
 .
 ├── docker-compose.yml
 ├── backend/
 │   ├── Dockerfile
 │   ├── package.json
 │   └── src/
-│       ├── index.js                 # App entry point
+│       ├── index.js
 │       ├── config/
-│       │   ├── db.js                # DB connection + schema init
-│       │   ├── jwt.js               # Token generation/verification
-│       │   └── cron.js              # Scheduled reminder emails
+│       │   ├── db.js
+│       │   ├── jwt.js
+│       │   └── cron.js
 │       ├── middleware/
-│       │   ├── auth.js              # Route protection
-│       │   └── errorHandler.js      # Centralized error handling
+│       │   ├── auth.js
+│       │   └── errorHandler.js
 │       ├── routes/
 │       │   ├── auth.js
 │       │   ├── applications.js
@@ -117,13 +219,13 @@ A dedicated error-handling middleware ensures failures return clean, consistent 
     ├── vite.config.js
     ├── index.html
     └── src/
-        ├── main.jsx                 # React entry point
-        ├── App.jsx                  # Route definitions
-        ├── index.css                # Design system / styling
+        ├── main.jsx
+        ├── App.jsx
+        ├── index.css
         ├── api/
-        │   └── axios.js             # Shared API client
+        │   └── axios.js
         ├── context/
-        │   └── AuthContext.jsx      # Global auth state
+        │   └── AuthContext.jsx
         ├── components/
         │   ├── layout/
         │   │   ├── ProtectedLayout.jsx
@@ -135,14 +237,83 @@ A dedicated error-handling middleware ensures failures return clean, consistent 
             └── Dashboard.jsx
 ```
 
----
+## 🗺️ End-to-End Workflow
+
+### Authentication
+
+```text
+AuthPage
+   ↓
+Google OAuth / Email + Password
+   ↓
+Express Auth Routes
+   ↓
+Authentication Controller
+   ↓
+JWT Access + Refresh Tokens
+   ↓
+Protected API Requests
+```
+
+### Job Applications
+
+```text
+Applications Page
+   ↓
+Axios API Client
+   ↓
+Express REST API
+   ↓
+Application Controller
+   ↓
+PostgreSQL
+   ↓
+Updated Application Data
+```
+
+### Analytics
+
+```text
+Dashboard
+   ↓
+Analytics API
+   ↓
+Analytics Controller
+   ↓
+PostgreSQL Queries
+   ↓
+Application Statistics
+   ↓
+Dashboard Charts
+```
+
+### Resume Intelligence
+
+```text
+Resume
+   ↓
+Gemini AI
+   ↓
+Skill Extraction
+   ↓
+Job Requirement Analysis
+   ↓
+Skill Gap Detection
+   ↓
+ATS Resume Generation
+   ↓
+Puppeteer PDF
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- [Docker](https://www.docker.com/) and Docker Compose installed
 
-### Run the full stack
+- Node.js & npm
+- Docker & Docker Compose
+- PostgreSQL
+
+### Run with Docker
 
 ```bash
 git clone <repository-url>
@@ -150,9 +321,7 @@ cd hiretrack
 docker-compose up --build
 ```
 
-This spins up the PostgreSQL database, the Express backend, and the React frontend (served via Nginx) together — no manual environment juggling required.
-
-### Local development (without Docker)
+### Local Development
 
 ```bash
 # Backend
@@ -166,31 +335,31 @@ npm install
 npm run dev
 ```
 
-The Vite dev server proxies API requests to the backend, so both can run independently during development.
+## 🚢 Deployment
+
+HireTrack uses a containerized and cloud-based deployment setup:
+
+- 🐳 **Docker / Docker Compose** — Containerized services
+- ⚙️ **Render** — Backend deployment
+- ▲ **Vercel** — Frontend deployment
+- 🗄️ **PostgreSQL** — Relational data storage
+- 🌐 **Nginx** — Production frontend serving
+
+## 📈 Project Highlights
+
+- ⚡ Full-stack **React + Node.js + PostgreSQL** application
+- 🔐 **JWT + Refresh Token Rotation + Google OAuth**
+- 🍪 Secure **HTTP-only cookie** authentication
+- 🤖 **Gemini AI** resume parsing and skill-gap detection
+- 📄 **ATS-optimized PDF resume generation** using Puppeteer
+- 📧 Automated follow-up emails using **Node-cron + Nodemailer**
+- 📊 Data-driven analytics dashboard
+- 📋 Designed to manage **200+ job applications per user**
+- 🐳 Dockerized development and deployment
+- ☁️ Deployed using **Render + Vercel**
 
 ---
 
-## 🗺️ End-to-End Flow (for reviewers)
+### 🎯 Built With
 
-**Login:** `AuthPage.jsx` → `AuthContext` → `axios.js` → `routes/auth.js` → `authController.js` → `jwt.js`
-
-**Applications:** `Applications.jsx` → `routes/applications.js` → `applicationController.js` → PostgreSQL → table updates
-
-**Dashboard:** `Dashboard.jsx` → analytics endpoints → `analyticsController.js` → charts render
-
-**Reminders:** `cron.js` runs on schedule → checks DB for due follow-ups → sends email via `nodemailer`
-
----
-
-
-The core system is already solid, and these are the natural next additions to round it out into an even more complete job-search platform:
-
-- 🔑 **OAuth Login (Google/GitHub)** — Sign in with existing Google or GitHub accounts, reducing signup friction alongside the current email/password + JWT flow.
-- 📄 **Resume Upload** — Let users attach and store a resume against their profile or individual applications, so all their job-search materials live in one place.
-- 🤖 **AI Resume Matching** — Compare an uploaded resume against a job description to surface match strength and skill gaps, helping users tailor applications before submitting.
-- 🎤 **Interview Preparation Assistant** — An AI-assisted tool that generates likely interview questions and practice answers based on the role and company for a given application.
-
-These additions would extend HireTrack from a tracking tool into a genuinely end-to-end job-search companion — and the existing architecture (modular routes/controllers, centralized API client, auth middleware) is well positioned to absorb them without a redesign.
-
----
-
+**React • Vite • Node.js • Express.js • PostgreSQL • JWT • Google OAuth • Gemini AI • Puppeteer • Node-cron • Nodemailer • Docker • Render • Vercel**
