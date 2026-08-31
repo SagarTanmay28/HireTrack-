@@ -3,8 +3,6 @@
 HireTrack is a **full-stack Job Application Tracker** built to help job seekers manage their complete job-search workflow in one place. It supports **200+ job applications per user** with secure authentication, application tracking, analytics, automated follow-ups, AI-powered resume analysis, and ATS-optimized resume generation.
 
 
-## 📸 Screenshots
-
 ### Dashboard
 
 ![HireTrack Dashboard](HireTrack%20Dashboard.png)
